@@ -6,29 +6,33 @@
 // Зроби так, щоб сховище оновлювалось не частіше, ніж раз на 500 мілісекунд. Для цього додай до проекту і використовуй бібліотеку lodash.throttle.
 import throttle from 'lodash.throttle';
 
-const formData = {};
 const form = document.querySelector('.feedback-form');
+const LOCALSTORAGE_KEY = 'feedback-form-state';
 
 form.addEventListener('submit', onFormSubmit);
 form.addEventListener('input', throttle(onFormInput, 500));
 
+populateTextarea();
+
 // Записуємо значення полей, зберігаємо значення в сторадж
 function onFormInput(e) {
+  let formData = localStorage.getItem(LOCALSTORAGE_KEY);
+  formData = formData ? JSON.parse(formData) : (formData = {});
+
   formData[e.target.name] = e.target.value;
-  localStorage.setItem('feedback-form-state', JSON.stringify(formData));
+  localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(formData));
 }
 
 // Відпрака форми: зупиняємо поведінку за замовчуванням, очищаємо форму, очищаємо localStorage
 function onFormSubmit(e) {
-  e.preventDafault();
-  e.target.reset();
-  localStorage.removeItem('feedback-form-state');
+  e.preventDefault();
+  e.currentTarget.reset();
+  localStorage.removeItem(LOCALSTORAGE_KEY);
 }
 
-populateTextarea();
 // Перевіряємо сторадж і записуємо в форму, якщо там щось є
 function populateTextarea() {
-  let savedData = localStorage.getItem('feedback-form-state');
+  let savedData = localStorage.getItem(LOCALSTORAGE_KEY);
   if (!savedData) return console.log({});
   try {
     savedData = JSON.parse(savedData);
