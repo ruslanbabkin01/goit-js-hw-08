@@ -7,8 +7,12 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 // Change code below this line
 
 const galeryDiv = document.querySelector('.gallery');
-
 const itemsMarkup = createItemsMarkup(galleryItems);
+
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
 galeryDiv.innerHTML = itemsMarkup;
 
@@ -22,10 +26,3 @@ function createItemsMarkup(galleryItems) {
     })
     .join('');
 }
-
-var lightbox = new SimpleLightbox('.gallery a', {
-  captionsData: 'alt',
-  captionDelay: 250,
-});
-
-console.log(galleryItems);
